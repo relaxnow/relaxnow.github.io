@@ -84,16 +84,21 @@ $('#secretsTable').bootstrapTable({
 });
 
 function onChange(event) {
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = onReaderLoad;
     reader.readAsText(event.target.files[0]);
 }
 
 function onReaderLoad(evt){
-    var input = evt.target.result;
-    var data = JSON.parse(input);
+    let input = evt.target.result;
+    let data = {};
+    try {
+        data = JSON.parse(input);
+    } catch (e) {
+        alert("File does not parse as JSON. Not Container Security Result.")
+    }
     if (!data || typeof data["policy-results"] === "undefined") {
-        alert("Missing 'policy-results' not a Container Security Result?")
+        alert("Missing 'policy-results' not a Container Security Result.")
         return;
     }
     processData(data);
@@ -202,7 +207,7 @@ function buildSecretsTable(data) {
 
 function objToHtml(obj, stack = '') {
     let ret = '';
-    for (var property in obj) {
+    for (let property in obj) {
         if (obj.hasOwnProperty(property)) {
             if (typeof obj[property] == "object") {
                 ret += objToHtml(obj[property], (stack === "" ? "" : stack + ".") + property);
