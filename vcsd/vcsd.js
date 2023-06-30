@@ -155,19 +155,21 @@ function buildMisconfigurationsTable(data) {
     if (typeof data['configs'].Results !== 'undefined') {
         for (let i=0; i < data['configs'].Results.length; i++) {
             const result = data['configs'].Results[i];
-            for (let j=0; j < result.Misconfigurations.length; j++) {
-                const misconf = result.Misconfigurations[j];
-                tableData.push({
-                    nr      : misconfigurations.length+1,
-                    title   : misconf.Title,
-                    provider: result.Type, 
-                    id      : misconf.ID,
-                    severity: misconf.Severity
-                });
+            if (typeof result.Misconfigurations !== "undefined") {
+                for (let j=0; j < result.Misconfigurations.length; j++) {
+                    const misconf = result.Misconfigurations[j];
+                    tableData.push({
+                        nr      : misconfigurations.length+1,
+                        title   : misconf.Title,
+                        provider: result.Type, 
+                        id      : misconf.ID,
+                        severity: misconf.Severity
+                    });
 
-                misconf.Result = JSON.parse(JSON.stringify(result));
-                delete misconf.Result.Misconfigurations
-                misconfigurations.push(misconf);
+                    misconf.Result = JSON.parse(JSON.stringify(result));
+                    delete misconf.Result.Misconfigurations
+                    misconfigurations.push(misconf);
+                }
             }
         }
     }
