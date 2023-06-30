@@ -30,7 +30,7 @@ $('#vulnerabilitiesTable').bootstrapTable({
         { field: 'fixedin'      ,title: 'Fixed-in'      , sortable: true},
         { field: 'type'         ,title: 'Type'          , sortable: true, filterControl: "select"},
         { field: 'vulnerability',title: 'Vulnerability' , sortable: true, },
-        { field: 'severity'     ,title: 'Severity'      , sortable: true, filterControl: 'select'},
+        { field: 'severity'     ,title: 'Severity'      , sortable: true, filterControl: 'select', sorter: severitySorter},
     ],
     onClickRow: function (row) {
         const match = vulnerabilities['matches'][row.id-1];
@@ -52,7 +52,7 @@ $('#misconfigurationsTable').bootstrapTable({
         { field: 'title'        ,title: 'Title'        , sortable: true, filterControl: "input"}, 
         { field: 'provider'     ,title: 'Provider'     , sortable: true, filterControl: "select"},
         { field: 'id'           ,title: 'ID'            , sortable: true},
-        { field: 'severity'     ,title: 'Severity'      , sortable: true, filterControl: 'select'},
+        { field: 'severity'     ,title: 'Severity'      , sortable: true, filterControl: 'select', sorter: severitySorter},
     ],
     onClickRow: function (row) {
         const misconf = misconfigurations[row.nr-1];
@@ -73,7 +73,7 @@ $('#secretsTable').bootstrapTable({
         { field: 'nr'           ,title: 'Number'},
         { field: 'file'        ,title: 'File'        , sortable: true, filterControl: "input"}, 
         { field: 'secretType'     ,title: 'Secret Type'     , sortable: true, filterControl: "select"},
-        { field: 'severity'     ,title: 'Severity'      , sortable: true, filterControl: 'select'},
+        { field: 'severity'     ,title: 'Severity'      , sortable: true, filterControl: 'select', sorter: severitySorter},
     ],
     onClickRow: function (row) {
         const secret = secrets[row.nr-1];
@@ -228,4 +228,20 @@ function escapeHtml(value) {
     const p = document.createElement('p'); 
     $(p).text(value); 
     return $(p).html();
+}
+
+function severitySorter(a, b) {
+    const severities = [
+        'Critical',
+        'CRITICAL',
+        'High',
+        'HIGH',
+        'Medium',
+        'MEDIUM',
+        'Low',
+        'LOW',
+        'Unknown',
+        'UNKNOWN',
+    ];
+    return severities.indexOf(a) - severities.indexOf(b);
 }
