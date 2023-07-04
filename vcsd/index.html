@@ -15,6 +15,11 @@
         .hidden {
             display: none
         }
+        table {
+            table-layout:fixed;
+            max-width:100%;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 
@@ -116,7 +121,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="modalData"></div>
+                    <div id="modalData" class="container"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal"

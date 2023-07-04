@@ -1,7 +1,7 @@
 // $.getJSON("test.json", function(data) {
+//     console.log("test.json",data);
 //     processData(data);
 // });
-
 document.getElementById('file').addEventListener('change', onChange);
 
 $('#policyResultsTable').bootstrapTable({
@@ -25,16 +25,23 @@ $('#vulnerabilitiesTable').bootstrapTable({
     sortName: 'severity',
     columns: [
         { field: 'id'           ,title: 'Number'},
-        { field: 'name'         ,title: 'Source'        , sortable: true, filterControl: "input"}, 
-        { field: 'installed'    ,title: 'Message'       , sortable: true},
-        { field: 'fixedin'      ,title: 'Fixed-in'      , sortable: true},
-        { field: 'type'         ,title: 'Type'          , sortable: true, filterControl: "select"},
-        { field: 'vulnerability',title: 'Vulnerability' , sortable: true, },
-        { field: 'severity'     ,title: 'Severity'      , sortable: true, filterControl: 'select', sorter: severitySorter},
+        { field: 'name'         ,title: 'Source'            , sortable: true, filterControl: "input"}, 
+        { field: 'installed'    ,title: 'Installed version' , sortable: true},
+        { field: 'fixedin'      ,title: 'Fixed-in'          , sortable: true},
+        { field: 'type'         ,title: 'Type'              , sortable: true, filterControl: "select"},
+        { field: 'vulnerability',title: 'Vulnerability'     , sortable: true, filterControl: "input"},
+        { field: 'severity'     ,title: 'Severity'          , sortable: true, filterControl: 'select', sorter: severitySorter},
     ],
     onClickRow: function (row) {
         const match = vulnerabilities['matches'][row.id-1];
-        $('#modalData').html('<table>' + objToHtml(match) + '</table>')
+        const artifactHtml = '<h3>Artifact</h3><table>' + objToHtml(match.artifact) + '</table>';
+        const matchDetailsHtml = '<h3>Match details</h3><table>' + objToHtml(match.matchDetails) + '</table>';
+        let relatedVulnerabilitiesHtml = '';
+        if (match.relatedVulnerabilities.length > 0) {
+            relatedVulnerabilitiesHtml = '<h3>Related Vulnerabilities</h3><table>' + objToHtml(match.relatedVulnerabilities) + '</table>';
+        }
+        const vulnerabilityHtml = '<h3>Vulnerability</h3><table>' + objToHtml(match.vulnerability) + '</table>';
+        $('#modalData').html(artifactHtml + vulnerabilityHtml + relatedVulnerabilitiesHtml + matchDetailsHtml);
         $('#detailsModal').modal('show')
     },
     data: []
@@ -240,6 +247,8 @@ function severitySorter(a, b) {
         'MEDIUM',
         'Low',
         'LOW',
+        'Negligible',
+        'NEGLIGIBLE',
         'Unknown',
         'UNKNOWN',
     ];
