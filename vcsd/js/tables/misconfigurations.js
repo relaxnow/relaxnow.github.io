@@ -1,6 +1,6 @@
 class MisconfigurationsTable {
     static mitigations = {};
-    static details = [];
+    static details = {};
     static rows = [];
 
     static {
@@ -11,7 +11,7 @@ class MisconfigurationsTable {
             filterControl: true,
             sortName: 'severity',
             columns: [
-                { field: 'id'               ,title: 'ID'                , visible: false},
+                { field: 'id'           ,title: 'ID'           , visible: false},
                 { field: 'severity'     ,title: 'Severity'     , sortable: true, filterControl: 'select', sorter: severitySorter},
                 { field: 'target'       ,title: 'Target'       , sortable: true, filterControl: "input"},
                 { field: 'ruleId'       ,title: 'Rule ID'      , sortable: true, filterControl: "select"},
@@ -38,7 +38,7 @@ class MisconfigurationsTable {
                 }}
             ],
             onClickRow: (row) => {
-                const misconf = this.details[row.nr-1];
+                const misconf = this.details[row.id];
                 $('#modalData').html('<table>' + objToHtml(misconf) + '</table>')
                 $('#detailsModal').modal('show')
             },
@@ -59,7 +59,7 @@ class MisconfigurationsTable {
                         misconf.Result = JSON.parse(JSON.stringify(result));
                         delete misconf.Result.Misconfigurations
 
-                        const id = misconf.id + '@' + misconf.Result.target;
+                        const id = misconf.ID + '@' + misconf.Result.Target;
                         const mitigation = this.mitigations[id];
 
                         this.rows.push({
@@ -72,7 +72,7 @@ class MisconfigurationsTable {
                             mitigated: mitigation ? MITIGATED:NOT_MITIGATED
                         });
 
-                        this.details.push(misconf);
+                        this.details[id] = misconf;
                     }
                 }
             }

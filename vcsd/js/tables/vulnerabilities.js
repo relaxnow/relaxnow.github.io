@@ -17,7 +17,7 @@ class VulnerabilitiesTable {
                 { field: 'name'             ,title: 'Source'            , sortable: true, filterControl: "input"},
                 { field: 'vulnerability'    ,title: 'Vulnerability'     , sortable: true, filterControl: "input"},
                 { field: 'installed'        ,title: 'Installed version' , sortable: true},
-                { field: 'fixedin'          ,title: 'Fixed-in'          , sortable: true},
+                { field: 'fixstate'         ,title: 'Fix state'         , sortable: true, filterControl: "select"},
                 { field: 'artifactType'     ,title: 'Type'              , sortable: true, filterControl: "select"},
                 { field: 'mitigated'        ,title: 'Mitigated'         , sortable: true, filterControl: 'select'},
                 { field: 'actions'          ,title: 'Actions'           , onClickRow: null, formatter: actionsFormatter, events: {
@@ -70,7 +70,7 @@ class VulnerabilitiesTable {
                 id              : id,
                 name            : match.artifact.name,
                 installed       : match.artifact.version,
-                fixedin         : match.vulnerability.fix.versions[0],
+                fixstate        : match.vulnerability.fix.state,
                 artifactType    : match.artifact.type,
                 vulnerability   : match.vulnerability.id,
                 severity        : match.vulnerability.severity,

@@ -1,6 +1,6 @@
-// $.getJSON("mitigations.json", function(data) {
-//     processMitigations(data);
-// });
+$.getJSON("mitigations.json", function(data) {
+    processMitigations(data);
+});
 
 const MITIGATION_IDENTIFIER_TYPE = "veracode-container-security-display.mitigations.v1.json";
 const MITIGATED = "Mitigated";
