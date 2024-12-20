@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veracode IDE Extension Debug Log Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #000;
+        }
+        h1 {
+            color: #333;
+        }
+        #log-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .log-line {
+            margin-bottom: 10px;
+        }
+        .log-line.debug {
+            color: #0066cc;
+        }
+        .log-line.time {
+            color: #999;
+        }
+        .log-line.message {
+            color: #333;
+        }
+        #path-list, #dotnet-info {
+            margin-top: 20px;
+        }
+        #path-header, #dotnet-header {
+            cursor: pointer;
+            color: #0066cc;
+            text-decoration: underline;
+        }
+        #path-items, #dotnet-items {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            font-family: monospace;
+        }
+        .hidden {
+            display: none;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        .dark-mode h1 {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Veracode IDE Extension Debug Log Viewer</h1>
+    <p>Upload a debug log file to view its contents:</p>
+    <input type="file" id="logFileInput" accept=".log, .txt">
+
+    <div id="log-container"></div>
+
+    <div id="path-list" class="hidden">
+        <div id="path-header">$PATH (click to expand/collapse)</div>
+        <div id="path-items"></div>
+    </div>
+
+    <div id="dotnet-info" class="hidden">
+        <div id="dotnet-header">.NET Diagnostic Info (click to expand/collapse)</div>
+        <div id="dotnet-items"></div>
+    </div>
+
+    <script>
+        document.getElementById('logFileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const logContainer = document.getElementById('log-container');
+            const pathHeader = document.getElementById('path-header');
+            const pathItems = document.getElementById('path-items');
+            const dotnetHeader = document.getElementById('dotnet-header');
+            const dotnetItems = document.getElementById('dotnet-items');
+            const pathList = document.getElementById('path-list');
+            const dotnetInfo = document.getElementById('dotnet-info');
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const logLines = e.target.result.split('\n');
+                    logContainer.innerHTML = '';
+                    pathItems.innerHTML = '';
+                    dotnetItems.innerHTML = '';
+
+                    let pathFound = false;
+                    let dotnetFound = false;
+
+                    logLines.forEach(line => {
+                        if (line.trim()) {
+                            if (line.includes('$PATH')) {
+                                const pathLine = line.split('=')[1]?.trim();
+                                if (pathLine) {
+                                    pathFound = true;
+                                    const paths = pathLine.split(';');
+                                    paths.forEach(path => {
+                                        const pathElement = document.createElement('div');
+                                        pathElement.textContent = path;
+                                        pathItems.appendChild(pathElement);
+                                    });
+                                }
+                            } else if (line.includes('dotnet info:')) {
+                                console.log(line)
+                                const dotnetMessage = JSON.parse(line).message.
+                                    trim().
+                                    replace(/\\\\r\\\\n/g, "\n").
+                                    replace(/\\r\\n/g,"\n").
+                                    replace(/\\t/,"\t");
+                                if (dotnetMessage) {
+                                    dotnetFound = true;
+                                    const dotnetElement = document.createElement('pre');
+                                    dotnetElement.textContent = dotnetMessage;
+                                    dotnetItems.appendChild(dotnetElement);
+                                }
+                            } else {
+                                try {
+                                    const logEntry = JSON.parse(line);
+                                    const logElement = document.createElement('div');
+                                    logElement.classList.add('log-line', logEntry.level);
+
+                                    const messageElement = document.createElement('span');
+                                    messageElement.classList.add('message');
+                                    messageElement.textContent = logEntry.message;
+                                    logElement.appendChild(messageElement);
+
+                                    logContainer.appendChild(logElement);
+                                } catch (err) {
+                                    const unparsableElement = document.createElement('div');
+                                    unparsableElement.classList.add('log-line', 'unparsable');
+                                    unparsableElement.textContent = line;
+                                    logContainer.appendChild(unparsableElement);
+                                }
+                            }
+                        }
+                    });
+
+                    pathList.classList.toggle('hidden', !pathFound);
+                    dotnetInfo.classList.toggle('hidden', !dotnetFound);
+                };
+
+                reader.readAsText(file);
+            }
+
+            pathHeader.addEventListener('click', () => {
+                pathItems.style.display = pathItems.style.display === 'none' ? 'block' : 'none';
+            });
+
+            dotnetHeader.addEventListener('click', () => {
+                dotnetItems.style.display = dotnetItems.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            const body = document.body;
+            const darkModeButton = document.getElementById('darkModeToggle');
+
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                darkModeButton.textContent = 'Toggle Light Mode';
+            } else {
+                darkModeButton.textContent = 'Toggle Dark Mode';
+            }
+        });
+    </script>
+
+</body>
+</html>
