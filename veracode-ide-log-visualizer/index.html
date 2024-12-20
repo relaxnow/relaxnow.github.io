@@ -69,7 +69,9 @@
 <body>
     <h1>Veracode IDE Extension Debug Log Viewer</h1>
     <h2>Processed locally in browser, no data is sent on the network</h2>
-    <p>Upload a debug log file to view its contents:</p>
+    <p>Upload a debug log file to view its contents.</p>
+    <p>You can find the log files in the <pre>.veracode/ide_agent/$NAME_OF_IDE/</pre> folder in your home folder.</p>
+    <p>For example <pre>~/.veracode/ide_agent/vscode/9b781fe2-4197-481e-abfd-5a18f4400ec3.log</pre></p>
     <input type="file" id="logFileInput" accept=".log, .txt">
 
     <div id="log-container"></div>
@@ -84,7 +86,7 @@
         <div id="dotnet-items"></div>
     </div>
 
-    <p>Contribute here: <a href="https://github.com/relaxnow/veracode-ide-log-visualize">
+    <p><br><br><hr>Contribute here: <a href="https://github.com/relaxnow/veracode-ide-log-visualize">
         https://github.com/relaxnow/veracode-ide-log-visualize</a>
     </p>
 
