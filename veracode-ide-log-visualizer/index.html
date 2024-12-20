@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Veracode IDE Extension Debug Log Viewer</title>
+    <title>Unofficial Veracode IDE Extension Debug Log Viewer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,8 +67,8 @@
     </style>
 </head>
 <body>
-
     <h1>Veracode IDE Extension Debug Log Viewer</h1>
+    <h2>Processed locally in browser, no data is sent on the network</h2>
     <p>Upload a debug log file to view its contents:</p>
     <input type="file" id="logFileInput" accept=".log, .txt">
 
@@ -83,6 +83,10 @@
         <div id="dotnet-header">.NET Diagnostic Info (click to expand/collapse)</div>
         <div id="dotnet-items"></div>
     </div>
+
+    <p>Contribute here: <a href="https://github.com/relaxnow/veracode-ide-log-visualize">
+        https://github.com/relaxnow/veracode-ide-log-visualize</a>
+    </p>
 
     <script>
         document.getElementById('logFileInput').addEventListener('change', function(event) {
